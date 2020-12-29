@@ -8,7 +8,7 @@
     <!-- 动态日志级别 -->
     <jmxConfigurator />
     <!-- 定义日志文件 输出位置 -->
-    <property name="log_dir" value="/Users/rusheng/Desktop/scu-wfw-helper/logs" />
+    <define name="log_dir" class="com.dpitech.edge.common.log.LogDirProperty" />
     <!-- 日志最大的历史 30天 -->
     <property name="maxHistory" value="30" />
 

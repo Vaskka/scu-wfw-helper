@@ -1,6 +1,7 @@
 package com.dpitech.edge.wfw.ua.impl;
 
 import com.dpitech.edge.common.*;
+import com.dpitech.edge.common.log.LogUtil;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
 import com.dpitech.edge.wfw.ua.facade.Simulation;
 import lombok.extern.slf4j.Slf4j;

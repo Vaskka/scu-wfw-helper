@@ -3,7 +3,7 @@ package com.dpitech.edge.wfw.biz.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dpitech.edge.common.CommonConst;
 import com.dpitech.edge.common.HttpUtil;
-import com.dpitech.edge.common.LogUtil;
+import com.dpitech.edge.common.log.LogUtil;
 import com.dpitech.edge.wfw.biz.facade.HealthCodeService;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
 import com.dpitech.edge.wfw.ua.facade.Simulation;
