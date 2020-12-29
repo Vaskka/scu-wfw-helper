@@ -7,7 +7,7 @@
     <groupId>org.dpitech.edge</groupId>
     <artifactId>scu-wfw-helper</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
     <modules>
         <module>scu-ua-simulation</module>
         <module>scu-wfw-api</module>
