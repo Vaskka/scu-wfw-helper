@@ -51,6 +51,11 @@ public class CommonConst {
     public static final String PHONE_CODE_URL = "https://ua.scu.edu.cn/token";
 
     /**
+     * 个人信息url
+     */
+    public static final String SELF_INFO_URL = "https://wfw.scu.edu.cn/uc/wap/user/get-info";
+
+    /**
      * 健康码url
      */
     public static final String HEALTH_CODE_URL = "https://wfw.scu.edu.cn/healthcode/wap/default/index";

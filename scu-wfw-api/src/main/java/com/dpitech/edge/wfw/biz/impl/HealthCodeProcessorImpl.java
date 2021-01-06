@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dpitech.edge.common.CommonConst;
 import com.dpitech.edge.common.HttpUtil;
 import com.dpitech.edge.common.log.LogUtil;
+import com.dpitech.edge.wfw.biz.exceptions.ApiException;
 import com.dpitech.edge.wfw.biz.facade.HealthCodeProcessor;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
 import com.dpitech.edge.wfw.ua.facade.Simulation;
@@ -26,16 +27,17 @@ public class HealthCodeProcessorImpl implements HealthCodeProcessor {
      * @return json object
      * @throws AuthException 用户名密码错误
      * @throws IOException api call error.
+     * @throws ApiException api exception.
      */
     @Override
-    public JSONObject getRawJsonData(String authCookie) throws AuthException, IOException {
+    public JSONObject getRawJsonData(String authCookie) throws AuthException, IOException, ApiException {
         HttpResponse<String> httpResponse;
         try {
             LogUtil.debugf(log, "health code request ready to send, authedCookie is: {}", authCookie);
             httpResponse = HttpUtil.get(CommonConst.HEALTH_CODE_URL, authCookie, CommonConst.COMMON_REFER);
             LogUtil.debugf(log, "health code request already sent, resp is: {}", httpResponse);
         } catch (Throwable e) {
-            throw new IOException(e.toString(), e);
+            throw new ApiException(e.toString(), e, e.getLocalizedMessage());
         }
 
         return JSONObject.parseObject(httpResponse.body());
