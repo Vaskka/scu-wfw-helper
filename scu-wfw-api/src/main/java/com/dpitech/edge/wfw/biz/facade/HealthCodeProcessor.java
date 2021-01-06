@@ -11,16 +11,6 @@ import java.io.IOException;
  *
  * @author rusheng
  */
-public interface HealthCodeProcessor {
-
-    /**
-     * 返回健康码接口获取原生json
-     * @param stuNumber student number
-     * @param psw ua password
-     * @return json object
-     * @throws AuthException 用户名密码错误
-     * @throws IOException api call error.
-     */
-    JSONObject getHealthCodeInfo(String stuNumber, String psw) throws AuthException, IOException;
+public interface HealthCodeProcessor extends BaseApiProcessor {
 
 }

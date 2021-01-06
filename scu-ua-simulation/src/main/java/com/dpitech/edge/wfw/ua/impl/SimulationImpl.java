@@ -1,5 +1,6 @@
 package com.dpitech.edge.wfw.ua.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dpitech.edge.common.*;
 import com.dpitech.edge.common.log.LogUtil;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
@@ -9,16 +10,13 @@ import org.seimicrawler.xpath.JXDocument;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author rusheng
  */
 @Slf4j
-public class UsernamePasswordSimulationImpl implements Simulation {
+public class SimulationImpl implements Simulation {
 
     /**
      * eai-sess
@@ -100,17 +98,104 @@ public class UsernamePasswordSimulationImpl implements Simulation {
     private final CookieManager cookieManager = new CookieManager();
 
     /**
-     * 得到已经授权的cookie，网络访问失败抛出IOException
+     * <b>学号密码</b>得到已经授权的cookie，网络访问失败抛出IOException
      * @param studentNumber 学号
-     * @param password ua系统密码
+     * @param getPasswordCallback ua系统密码
      * @return cookie String
      * @throws AuthException 鉴权失败
      * @throws IOException 接口调用失败
      */
     @Override
-    public String getWfwCookieStringAuthenticated(String studentNumber, String password) throws AuthException, IOException {
-        LogUtil.infof(log, "stu-num: {}, psw: xxx, ready to auth.", studentNumber);
+    public String getWfwCookieStringAuthenticatedUsername(String studentNumber, PasswordCallback getPasswordCallback) throws AuthException, IOException {
+        LogUtil.infof(log, "stu-num: {} ready to auth with username.", studentNumber);
+        var realLoginPageUrl = getRealLoginUrl();
 
+        // xpath process hide input and do post auth
+        return doFinalLoginGetAuthenticatedCookie(studentNumber, getPasswordCallback.getPassword(), formHideInfo(realLoginPageUrl), UaLoginType.USERNAME_PSW);
+    }
+
+    /**
+     * <b>关联手机</b>得到已经授权的cookie，网络访问失败抛出IOException
+     *
+     * 接口内不会尝试获取验证码
+     *
+     * @param studentNumber 学号
+     * @param getPhoneCodeCallback 手机验证码接口回调
+     * @return cookie String
+     * @throws AuthException 鉴权失败
+     * @throws IOException 接口调用失败
+     */
+    @Override
+    public String getWfwCookieStringAuthenticatedPhone(String studentNumber, PasswordCallback getPhoneCodeCallback) throws AuthException, IOException {
+        LogUtil.infof(log, "stu-num: {} ready to auth with phone.", studentNumber);
+        var realLoginPageUrl = getRealLoginUrl();
+
+        // xpath process hide input and do post auth
+        return doFinalLoginGetAuthenticatedCookie(studentNumber, getPhoneCodeCallback.getPassword(), formHideInfo(realLoginPageUrl), UaLoginType.PHONE_CODE);
+    }
+
+    /**
+     * 验证学号密码正确性
+     * @param student 学号
+     * @param password 密码
+     * @return boolean
+     * @throws IOException upper api error.
+     */
+    @Override
+    public boolean verifyStudentIdentity(String student, final String password) throws IOException {
+        try {
+            getWfwCookieStringAuthenticatedUsername(student, () -> password);
+        }
+        catch (AuthException e) {
+            return false;
+        }
+        catch (Throwable e) {
+            throw new IOException("upper api error.", e);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void getPhoneCode(String stuNumber) throws IOException {
+        JSONObject body = new JSONObject();
+        body.put("username", stuNumber);
+        String respBody = null;
+        try {
+            respBody = HttpUtil.postWithJson(CommonConst.PHONE_CODE_URL, body, "", CommonConst.COMMON_REFER).body();
+        } catch (InterruptedException e) {
+            throw new IOException(e);
+        }
+
+        LogUtil.infof(log, "send phone code get response: {}", respBody);
+        JSONObject resp = JSONObject.parseObject(respBody);
+        if (CommonUtil.isEmpty(resp.getString("status")) || !"success".equals(resp.getString("status"))) {
+            LogUtil.errorf(log, "send sms code to {} is error, error response is: {}", stuNumber, respBody);
+            throw new IOException("send sms code error, status is " + resp.getString("status"));
+        }
+
+    }
+
+    /**
+     * HttpResponse -> localtion and save cookie
+     * @param response HttpResponse
+     * @return location url
+     */
+    private String fromResponseGetLocationAndSaveCookie(HttpResponse<String> response) {
+        cookieManager.saveCookieFromRawSetCookieString(response.headers().firstValue("Set-Cookie")
+                .orElse(""));
+        var locationUrl = response.headers().firstValue("location")
+                .orElse(null);
+        LogUtil.debugf(log, "from response headers get location: {}", locationUrl);
+        return locationUrl;
+    }
+
+    /**
+     * 得到真正的登录url
+     * @return url
+     * @throws IOException exception
+     */
+    private String getRealLoginUrl() throws IOException {
         // 第一次302，得到eai-sess、第二次鉴权的url
         HttpResponse<String> httpResponse;
         try {
@@ -145,46 +230,8 @@ public class UsernamePasswordSimulationImpl implements Simulation {
             LogUtil.errorf(log, "final 302 error, url: {}, cookie:{}, message:{}", e, casAuthUrl, realLoginCookieVal, e.getMessage());
             throw new IOException(e.toString(), e);
         }
-        var realLoginPageUrl = fromResponseGetLocationAndSaveCookie(realLoginUrlResp);
 
-        // xpath process hide input and do post auth
-        return doFinalLoginGetAuthenticatedCookie(studentNumber, password, formHideInfo(realLoginPageUrl));
-    }
-
-    /**
-     * 验证学号密码正确性
-     * @param student 学号
-     * @param password 密码
-     * @return boolean
-     * @throws IOException upper api error.
-     */
-    @Override
-    public boolean verifyStudentIdentity(String student, String password) throws IOException {
-        try {
-            getWfwCookieStringAuthenticated(student, password);
-        }
-        catch (AuthException e) {
-            return false;
-        }
-        catch (Throwable e) {
-            throw new IOException("upper api error.", e);
-        }
-
-        return true;
-    }
-
-    /**
-     * HttpResponse -> localtion and save cookie
-     * @param response HttpResponse
-     * @return location url
-     */
-    private String fromResponseGetLocationAndSaveCookie(HttpResponse<String> response) {
-        cookieManager.saveCookieFromRawSetCookieString(response.headers().firstValue("Set-Cookie")
-                .orElse(""));
-        var locationUrl = response.headers().firstValue("location")
-                .orElse(null);
-        LogUtil.debugf(log, "from response headers get location: {}", locationUrl);
-        return locationUrl;
+        return fromResponseGetLocationAndSaveCookie(realLoginUrlResp);
     }
 
     /**
@@ -228,13 +275,13 @@ public class UsernamePasswordSimulationImpl implements Simulation {
      * @param hideText input tag with "display: none;"
      * @return cookie line authenticated
      */
-    private String doFinalLoginGetAuthenticatedCookie(String stuNumber, String psw, String hideText) throws IOException {
+    private String doFinalLoginGetAuthenticatedCookie(String stuNumber, String psw, String hideText, UaLoginType uaLoginType) throws IOException {
         HttpResponse<String> resp;
         try {
             Map<String, String> bodyForm = new HashMap<>(16);
             bodyForm.put("username", stuNumber);
             bodyForm.put("password", psw);
-            bodyForm.put("type", UaLoginType.USERNAME_PSW.getVal());
+            bodyForm.put("type", uaLoginType.getVal());
             bodyForm.put("submit", "登录");
             bodyForm.put("_eventId", "submit");
             bodyForm.put("execution", hideText);
@@ -273,4 +320,5 @@ public class UsernamePasswordSimulationImpl implements Simulation {
         LogUtil.infof(log, "stu: {}, aleady authenticated.", stuNumber);
         return stepTwoCookieVal;
     }
+
 }

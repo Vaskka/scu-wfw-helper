@@ -12,6 +12,11 @@ public enum UaLoginType {
      * 用户名密码登录模式
      */
     USERNAME_PSW("username_password"),
+
+    /**
+     * 手机验证码模式
+     */
+    PHONE_CODE("username_smstoken")
     ;
 
     @Getter

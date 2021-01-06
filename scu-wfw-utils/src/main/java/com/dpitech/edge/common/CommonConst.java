@@ -38,12 +38,17 @@ public class CommonConst {
     /**
      * content type json
      */
-    public static final String COMMON_CONTENT_TYPE_JSON = "application/x-www-form-urlencoded";
+    public static final String COMMON_CONTENT_TYPE_JSON = "application/json";
 
     /**
      * 不特别声明的refer
      */
     public static final String COMMON_REFER = "https://ua.scu.edu.cn/login";
+
+    /**
+     * 手机验证吗url
+     */
+    public static final String PHONE_CODE_URL = "https://ua.scu.edu.cn/token";
 
     /**
      * 健康码url
