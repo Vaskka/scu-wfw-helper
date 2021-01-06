@@ -12,6 +12,6 @@ public class CommonTests {
 
     @Test
     public void commonTest() throws IOException {
-        System.out.println(healthCodeService.getHealthCodeInfo("2017141463062", "czm19990216"));
+        
     }
 }
