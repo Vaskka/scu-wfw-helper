@@ -12,7 +12,7 @@
         <module>scu-ua-simulation</module>
         <module>scu-wfw-api</module>
         <module>scu-wfw-processor</module>
-        <module>common-utils</module>
+        <module>scu-wfw-utils</module>
     </modules>
 
     <properties>

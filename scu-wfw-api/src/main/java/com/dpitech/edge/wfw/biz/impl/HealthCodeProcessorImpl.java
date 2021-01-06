@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dpitech.edge.common.CommonConst;
 import com.dpitech.edge.common.HttpUtil;
 import com.dpitech.edge.common.log.LogUtil;
-import com.dpitech.edge.wfw.biz.facade.HealthCodeService;
+import com.dpitech.edge.wfw.biz.facade.HealthCodeProcessor;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
 import com.dpitech.edge.wfw.ua.facade.Simulation;
 import com.dpitech.edge.wfw.ua.impl.UsernamePasswordSimulationImpl;
@@ -18,7 +18,7 @@ import java.net.http.HttpResponse;
  * @author rusheng
  */
 @Slf4j
-public class HealthCodeServiceImpl implements HealthCodeService {
+public class HealthCodeProcessorImpl implements HealthCodeProcessor {
 
     /**
      * ua agent

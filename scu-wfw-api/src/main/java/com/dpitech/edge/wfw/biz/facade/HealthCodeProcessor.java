@@ -11,7 +11,7 @@ import java.io.IOException;
  *
  * @author rusheng
  */
-public interface HealthCodeService {
+public interface HealthCodeProcessor {
 
     /**
      * 返回健康码接口获取原生json
