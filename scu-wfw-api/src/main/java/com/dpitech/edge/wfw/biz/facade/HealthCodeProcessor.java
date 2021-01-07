@@ -7,6 +7,6 @@ package com.dpitech.edge.wfw.biz.facade;
  *
  * @author rusheng
  */
-public interface HealthCodeProcessor extends BaseApiProcessor {
+public interface HealthCodeProcessor extends BaseFetchApiProcessor {
 
 }

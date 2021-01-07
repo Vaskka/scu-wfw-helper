@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @author rusheng
  */
-public interface SelfInfoProcessor extends BaseApiProcessor {
+public interface SelfInfoProcessor extends BaseFetchApiProcessor {
 
     /**
      * 获得组装好的java对象，过滤了不常用的字段

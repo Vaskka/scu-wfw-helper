@@ -7,9 +7,12 @@ import com.dpitech.edge.wfw.ua.excepton.AuthException;
 import java.io.IOException;
 
 /**
+ *
+ * 只读接口api基类
+ *
  * @author rusheng
  */
-public interface BaseApiProcessor {
+public interface BaseFetchApiProcessor {
 
     /**
      * 返回健康码接口获取原生json

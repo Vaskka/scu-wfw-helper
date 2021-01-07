@@ -71,8 +71,13 @@ public class CommonConst {
     public static final String UA_FIRST_LOGIN_URL = "https://ua.scu.edu.cn/login";
 
     /**
-     * 健康报打卡url
+     * 健康报打卡页面url
      */
-    public static final String NCOV_URL = "https://wfw.scu.edu.cn/ncov/wap/default/index";
+    public static final String NCOV_PAGE_URL = "https://wfw.scu.edu.cn/ncov/wap/default/index";
+
+    /**
+     * 健康报打卡上报url
+     */
+    public static final String NCOV_REPORT_URL = "https://wfw.scu.edu.cn/ncov/wap/default/save";
 
 }

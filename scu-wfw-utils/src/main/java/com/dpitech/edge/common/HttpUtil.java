@@ -2,10 +2,8 @@ package com.dpitech.edge.common;
 
 import com.alibaba.fastjson.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Authenticator;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
