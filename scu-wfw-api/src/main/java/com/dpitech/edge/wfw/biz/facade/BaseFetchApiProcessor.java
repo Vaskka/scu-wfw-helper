@@ -15,7 +15,7 @@ import java.io.IOException;
 public interface BaseFetchApiProcessor {
 
     /**
-     * 返回健康码接口获取原生json
+     * 返回获取数据的接口拿到的原生json
      * @param authCookie 已经赋权的cookie-line
      * @return json object
      * @throws AuthException 用户名密码错误

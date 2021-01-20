@@ -5,7 +5,7 @@ import com.dpitech.edge.common.CommonConst;
 import com.dpitech.edge.common.HttpUtil;
 import com.dpitech.edge.wfw.biz.exceptions.ApiException;
 import com.dpitech.edge.wfw.biz.facade.SelfInfoProcessor;
-import com.dpitech.edge.wfw.biz.model.SelfInfoModel;
+import com.dpitech.edge.wfw.biz.model.SelfInfoFetchModel;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
 
 import java.io.IOException;
@@ -54,27 +54,8 @@ public class SelfInfoProcessorImpl implements SelfInfoProcessor {
      * @throws ApiException api exception.
      */
     @Override
-    public SelfInfoModel getInfo(String authCookie) throws AuthException, IOException, ApiException {
+    public SelfInfoFetchModel getInfo(String authCookie) throws AuthException, IOException, ApiException {
         JSONObject rawData = getRawJsonData(authCookie);
-        JSONObject data = rawData.getJSONObject("d").getJSONObject("base");
-        JSONObject roleObj = data.getJSONObject("role");
-
-        SelfInfoModel.SelfInfoRole resRole = SelfInfoModel.SelfInfoRole.builder()
-                .identity(roleObj.getString("identity"))
-                .identityId(roleObj.getString("identity_id"))
-                .roleId(roleObj.getString("roleid"))
-                .inOnDuty("1".equals(roleObj.getString("sfzx")))
-                .stuNumber(roleObj.getString("number"))
-                .build();
-
-        return SelfInfoModel.builder()
-                .avatarUrl(data.getString("avatar"))
-                .email(data.getString("email"))
-                .sex(data.getString("sex"))
-                .mobile(data.getString("mobile"))
-                .realName(data.getString("realname"))
-                .uid(data.getString("uid"))
-                .role(resRole)
-                .build();
+        return SelfInfoFetchModel.getInstanceFromJson(rawData);
     }
 }

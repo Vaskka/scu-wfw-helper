@@ -8,7 +8,7 @@ import com.dpitech.edge.common.log.LogUtil;
 import com.dpitech.edge.wfw.biz.exceptions.ApiException;
 import com.dpitech.edge.wfw.biz.facade.HealthReportProcessor;
 import com.dpitech.edge.wfw.biz.facade.SelfInfoProcessor;
-import com.dpitech.edge.wfw.biz.model.SelfInfoModel;
+import com.dpitech.edge.wfw.biz.model.SelfInfoFetchModel;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +47,7 @@ public class HealthReportProcessorImpl implements HealthReportProcessor {
     @Override
     public JSONObject reportJiangAn(String authCookie) throws AuthException, IOException, ApiException {
 
-        SelfInfoModel selfInfoModel = selfInfoProcessor.getInfo(authCookie);
+        SelfInfoFetchModel selfInfoModel = selfInfoProcessor.getInfo(authCookie);
         LogUtil.infof(log, "self info model: {}", selfInfoModel);
 
         String uid = selfInfoModel.getUid();

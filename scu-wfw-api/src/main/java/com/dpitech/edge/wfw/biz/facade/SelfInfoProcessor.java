@@ -2,7 +2,7 @@ package com.dpitech.edge.wfw.biz.facade;
 
 
 import com.dpitech.edge.wfw.biz.exceptions.ApiException;
-import com.dpitech.edge.wfw.biz.model.SelfInfoModel;
+import com.dpitech.edge.wfw.biz.model.SelfInfoFetchModel;
 import com.dpitech.edge.wfw.ua.excepton.AuthException;
 
 import java.io.IOException;
@@ -23,6 +23,6 @@ public interface SelfInfoProcessor extends BaseFetchApiProcessor {
      * @throws IOException api call error.
      * @throws ApiException api exception.
      */
-    SelfInfoModel getInfo(String authCookie) throws AuthException, IOException, ApiException;
+    SelfInfoFetchModel getInfo(String authCookie) throws AuthException, IOException, ApiException;
 
 }

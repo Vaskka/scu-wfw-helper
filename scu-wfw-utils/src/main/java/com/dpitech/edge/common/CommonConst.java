@@ -80,4 +80,9 @@ public class CommonConst {
      */
     public static final String NCOV_REPORT_URL = "https://wfw.scu.edu.cn/ncov/wap/default/save";
 
+    /**
+     * 校园网终端设备获取url
+     */
+    public static final String SCHOOL_NETWORK_DEVICE_URL = "https://wfw.scu.edu.cn/netclient/wap/default/get-index";
+
 }
